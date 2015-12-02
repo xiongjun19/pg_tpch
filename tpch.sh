@@ -29,17 +29,17 @@ function benchmark_run() {
 
 	psql -h localhost -U $USER $DBNAME < dss/tpch-load.sql > $RESULTS/load.log 2> $RESULTS/load.err
 
-	#print_log "  creating primary keys"
+	print_log "  creating primary keys"
 
-	#psql -h localhost -U $USER $DBNAME < dss/tpch-pkeys.sql > $RESULTS/pkeys.log 2> $RESULTS/pkeys.err
+	psql -h localhost -U $USER $DBNAME < dss/tpch-pkeys.sql > $RESULTS/pkeys.log 2> $RESULTS/pkeys.err
 
-	#print_log "  creating foreign keys"
+	print_log "  creating foreign keys"
 
-	#psql -h localhost -U $USER $DBNAME < dss/tpch-alter.sql > $RESULTS/alter.log 2> $RESULTS/alter.err
+	psql -h localhost -U $USER $DBNAME < dss/tpch-alter.sql > $RESULTS/alter.log 2> $RESULTS/alter.err
 
-	#print_log "  creating indexes"
+	print_log "  creating indexes"
 
-	#psql -h localhost -U $USER $DBNAME < dss/tpch-index.sql > $RESULTS/index.log 2> $RESULTS/index.err
+	psql -h localhost -U $USER $DBNAME < dss/tpch-index.sql > $RESULTS/index.log 2> $RESULTS/index.err
 
 	print_log "  analyzing"
 
