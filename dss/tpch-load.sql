@@ -1,7 +1,7 @@
 BEGIN;
 
         CREATE TABLE PART (
-                P_PARTKEY               SERIAL,
+                P_PARTKEY               SERIAL8,
                 P_NAME                  VARCHAR(55),
                 P_MFGR                  CHAR(25),
                 P_BRAND                 CHAR(10),
@@ -19,7 +19,7 @@ COMMIT;
 BEGIN;
 
         CREATE TABLE REGION (
-                R_REGIONKEY     SERIAL,
+                R_REGIONKEY     SERIAL8,
                 R_NAME          CHAR(25),
                 R_COMMENT       VARCHAR(152)
         ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
@@ -31,7 +31,7 @@ COMMIT;
 BEGIN;
 
         CREATE TABLE NATION (
-                N_NATIONKEY             SERIAL,
+                N_NATIONKEY             SERIAL8,
                 N_NAME                  CHAR(25),
                 N_REGIONKEY             BIGINT NOT NULL,  -- references R_REGIONKEY
                 N_COMMENT               VARCHAR(152)
@@ -44,7 +44,7 @@ COMMIT;
 BEGIN;
 
         CREATE TABLE SUPPLIER (
-                S_SUPPKEY               SERIAL,
+                S_SUPPKEY               SERIAL8,
                 S_NAME                  CHAR(25),
                 S_ADDRESS               VARCHAR(40),
                 S_NATIONKEY             BIGINT NOT NULL, -- references N_NATIONKEY
@@ -60,7 +60,7 @@ COMMIT;
 BEGIN;
 
         CREATE TABLE CUSTOMER (
-                C_CUSTKEY               SERIAL,
+                C_CUSTKEY               SERIAL8,
                 C_NAME                  VARCHAR(25),
                 C_ADDRESS               VARCHAR(40),
                 C_NATIONKEY             BIGINT NOT NULL, -- references N_NATIONKEY
@@ -91,7 +91,7 @@ COMMIT;
 BEGIN;
 
         CREATE TABLE ORDERS (
-                O_ORDERKEY              SERIAL,
+                O_ORDERKEY              SERIAL8,
                 O_CUSTKEY               BIGINT NOT NULL, -- references C_CUSTKEY
                 O_ORDERSTATUS   CHAR(1),
                 O_TOTALPRICE    DECIMAL,
