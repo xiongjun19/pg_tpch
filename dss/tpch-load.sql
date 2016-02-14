@@ -10,7 +10,7 @@ BEGIN;
                 P_CONTAINER             CHAR(10),
                 P_RETAILPRICE   DECIMAL,
                 P_COMMENT               VARCHAR(23)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (p_partkey);
 
         COPY part FROM '/tmp/dss-data/part.csv' WITH csv DELIMITER '|';
 
@@ -22,7 +22,7 @@ BEGIN;
                 R_REGIONKEY     SERIAL8,
                 R_NAME          CHAR(25),
                 R_COMMENT       VARCHAR(152)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        )  with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (r_regionkey);
 
         COPY region FROM '/tmp/dss-data/region.csv' WITH csv DELIMITER '|';
 
@@ -35,7 +35,7 @@ BEGIN;
                 N_NAME                  CHAR(25),
                 N_REGIONKEY             BIGINT NOT NULL,  -- references R_REGIONKEY
                 N_COMMENT               VARCHAR(152)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        )  with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (n_nationkey);
 
         COPY nation FROM '/tmp/dss-data/nation.csv' WITH csv DELIMITER '|';
 
@@ -51,7 +51,7 @@ BEGIN;
                 S_PHONE                 CHAR(15),
                 S_ACCTBAL               DECIMAL,
                 S_COMMENT               VARCHAR(101)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        )  with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (s_suppkey);
 
         COPY supplier FROM '/tmp/dss-data/supplier.csv' WITH csv DELIMITER '|';
 
@@ -68,7 +68,7 @@ BEGIN;
                 C_ACCTBAL               DECIMAL,
                 C_MKTSEGMENT    CHAR(10),
                 C_COMMENT               VARCHAR(117)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        )  with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (c_custkey);
 
         COPY customer FROM '/tmp/dss-data/customer.csv' WITH csv DELIMITER '|';
 
@@ -82,7 +82,7 @@ BEGIN;
                 PS_AVAILQTY             INTEGER,
                 PS_SUPPLYCOST   DECIMAL,
                 PS_COMMENT              VARCHAR(199)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        )  with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (ps_partkey,ps_suppkey);
 
         COPY partsupp FROM '/tmp/dss-data/partsupp.csv' WITH csv DELIMITER '|';
 
@@ -100,7 +100,7 @@ BEGIN;
                 O_CLERK                 CHAR(15),
                 O_SHIPPRIORITY  INTEGER,
                 O_COMMENT               VARCHAR(79)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        )  with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (o_orderkey);
 
         COPY orders FROM '/tmp/dss-data/orders.csv' WITH csv DELIMITER '|';
 
@@ -125,7 +125,7 @@ BEGIN;
                 L_SHIPINSTRUCT  CHAR(25),
                 L_SHIPMODE              CHAR(10),
                 L_COMMENT               VARCHAR(44)
-        ) with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,COMPRESSTYPE=QUICKLZ,CHECKSUM=true,OIDS=false);
+        )  with (APPENDONLY=true,BLOCKSIZE=2097152,ORIENTATION=COLUMN,CHECKSUM=true,OIDS=false) DISTRIBUTED BY (l_orderkey, l_linenumber);
 
         COPY lineitem FROM '/tmp/dss-data/lineitem.csv' WITH csv DELIMITER '|';
 
