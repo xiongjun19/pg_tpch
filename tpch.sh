@@ -8,7 +8,7 @@ USER=$3
 DELAY=15
 
 # DSS queries timeout (5 minutes or something like that)
-DSS_TIMEOUT=300 # 5 minutes in seconds
+DSS_TIMEOUT=300000 # 5 minutes in seconds
 
 # log
 LOGFILE=bench.log
