@@ -3,6 +3,8 @@
 RESULTS=$1
 DBNAME=$2
 USER=$3
+# host_name="172.31.40.238"
+host_name=$4
 
 # delay between stats collections (iostat, vmstat, ...)
 DELAY=15
@@ -18,32 +20,32 @@ function benchmark_run() {
 	mkdir -p $RESULTS
 
 	# store the settings
-	psql -h localhost postgres -c "select name,setting from pg_settings" > $RESULTS/settings.log 2> $RESULTS/settings.err
+	psql -h ${host_name} postgres -c "select name,setting from pg_settings" > $RESULTS/settings.log 2> $RESULTS/settings.err
 
 	print_log "preparing TPC-H database"
 
 	# create database, populate it with data and set up foreign keys
-	# psql -h localhost tpch < dss/tpch-create.sql > $RESULTS/create.log 2> $RESULTS/create.err
+	# psql -h ${host_name} tpch < dss/tpch-create.sql > $RESULTS/create.log 2> $RESULTS/create.err
 
 	print_log "  loading data"
 
-	psql -h localhost -U $USER $DBNAME < dss/tpch-load.sql > $RESULTS/load.log 2> $RESULTS/load.err
+	psql -h ${host_name} -U $USER $DBNAME < dss/tpch-load.sql > $RESULTS/load.log 2> $RESULTS/load.err
 
 	print_log "  creating primary keys"
 
-	psql -h localhost -U $USER $DBNAME < dss/tpch-pkeys.sql > $RESULTS/pkeys.log 2> $RESULTS/pkeys.err
+	psql -h ${host_name} -U $USER $DBNAME < dss/tpch-pkeys.sql > $RESULTS/pkeys.log 2> $RESULTS/pkeys.err
 
 	print_log "  creating foreign keys"
 
-	psql -h localhost -U $USER $DBNAME < dss/tpch-alter.sql > $RESULTS/alter.log 2> $RESULTS/alter.err
+	psql -h ${host_name} -U $USER $DBNAME < dss/tpch-alter.sql > $RESULTS/alter.log 2> $RESULTS/alter.err
 
 	print_log "  creating indexes"
 
-	psql -h localhost -U $USER $DBNAME < dss/tpch-index.sql > $RESULTS/index.log 2> $RESULTS/index.err
+	psql -h ${host_name} -U $USER $DBNAME < dss/tpch-index.sql > $RESULTS/index.log 2> $RESULTS/index.err
 
 	print_log "  analyzing"
 
-	psql -h localhost -U $USER $DBNAME -c "analyze" > $RESULTS/analyze.log 2> $RESULTS/analyze.err
+	psql -h ${host_name} -U $USER $DBNAME -c "analyze" > $RESULTS/analyze.log 2> $RESULTS/analyze.err
 
 	print_log "running TPC-H benchmark"
 
@@ -81,13 +83,13 @@ function benchmark_dss() {
 			echo "======= query $n =======" >> $RESULTS/data.log 2>&1;
 
 			# run explain
-			psql -h localhost -U $USER $DBNAME < $qe > $RESULTS/explain/$n 2>> $RESULTS/explain.err
+			psql -h ${host_name} -U $USER $DBNAME < $qe > $RESULTS/explain/$n 2>> $RESULTS/explain.err
 
 			vmstat -s > $RESULTS/vmstat-s/before-$n.log 2>&1
 			vmstat -d > $RESULTS/vmstat-d/before-$n.log 2>&1
 
 			# run the query on background
-			/usr/bin/time -a -f "$n = %e" -o $RESULTS/results.log psql -h localhost -U $USER $DBNAME < $q > $RESULTS/results/$n 2> $RESULTS/errors/$n &
+			/usr/bin/time -a -f "$n = %e" -o $RESULTS/results.log psql -h ${host_name} -U $USER $DBNAME < $q > $RESULTS/results/$n 2> $RESULTS/errors/$n &
 
 			# wait up to the given number of seconds, then terminate the query if still running (don't wait for too long)
 			for i in `seq 0 $DSS_TIMEOUT`
@@ -102,13 +104,13 @@ function benchmark_dss() {
 						print_log "    killing query $n (timeout)"
 
 						# echo "$q : timeout" >> $RESULTS/results.log
-						psql -h localhost postgres -c "SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE datname = 'tpch'" >> $RESULTS/queries.err 2>&1;
+						psql -h ${host_name} postgres -c "SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE datname = 'tpch'" >> $RESULTS/queries.err 2>&1;
 
 						# time to do a cleanup
 						sleep 10;
 
 						# just check how many backends are there (should be 0)
-						psql -h localhost postgres -c "SELECT COUNT(*) AS tpch_backends FROM pg_stat_activity WHERE datname = 'tpch'" >> $RESULTS/queries.err 2>&1;
+						psql -h ${host_name} postgres -c "SELECT COUNT(*) AS tpch_backends FROM pg_stat_activity WHERE datname = 'tpch'" >> $RESULTS/queries.err 2>&1;
 
 					else
 						# the query is still running and we have time left, sleep another second
