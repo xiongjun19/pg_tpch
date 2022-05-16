@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 RESULTS=$1
 DBNAME=$2
@@ -47,7 +47,7 @@ function benchmark_run() {
 
 	print_log "running TPC-H benchmark"
 
-	benchmark_dss $RESULTS
+	# benchmark_dss $RESULTS
 
 	print_log "finished TPC-H benchmark"
 
