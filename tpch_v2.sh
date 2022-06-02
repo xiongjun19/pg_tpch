@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# 使用例子: bash tpch_v2.sh ./results ${db_name} gpadmin 172.31.40.238
+
 RESULTS=$1
 DBNAME=$2
 USER=$3

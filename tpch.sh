@@ -181,10 +181,10 @@ function print_log() {
 mkdir $RESULTS;
 
 # start statistics collection
-stat_collection_start $RESULTS
+# stat_collection_start $RESULTS
 
 # run the benchmark
 benchmark_run $RESULTS $DBNAME $USER
 
 # stop statistics collection
-stat_collection_stop
+# stat_collection_stop
